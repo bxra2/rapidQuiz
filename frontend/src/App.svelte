@@ -1,9 +1,8 @@
 <script lang="ts">
-  import svelteLogo from "./assets/svelte.svg";
-  import viteLogo from "/vite.svg";
-  import Counter from "./lib/Counter.svelte";
   import Button from "./lib/Button.svelte";
+  import QuizCard from "./lib/QuizCard.svelte";
   ////////////////////////////////////////
+  let quizzes: { _id: string; name: string }[] = [];
   async function getQuizzes() {
     let response = await fetch("http://localhost:5000/api/quizzes");
     if (!response.ok) {
@@ -11,8 +10,11 @@
     }
 
     let jsonData = await response.json();
+    quizzes = jsonData;
+  }
 
-    console.log(jsonData);
+  function hostQuiz(quiz) {
+    console.log(quiz);
   }
 
   function connect() {
@@ -31,25 +33,12 @@
 <main>
   <button on:click={getQuizzes}>get Quizzes</button>
   <button on:click={connect}>connect</button>
-
+  {#each quizzes as quiz}
+    <QuizCard on:host={() => hostQuiz(quiz)} {quiz} />
+  {/each}
   <div></div>
-  <Button />
+  <Button>HII</Button>
 </main>
 
 <style>
-  .logo {
-    height: 6em;
-    padding: 1.5em;
-    will-change: filter;
-    transition: filter 300ms;
-  }
-  .logo:hover {
-    filter: drop-shadow(0 0 2em #646cffaa);
-  }
-  .logo.svelte:hover {
-    filter: drop-shadow(0 0 2em #ff3e00aa);
-  }
-  .read-the-docs {
-    color: #888;
-  }
 </style>
